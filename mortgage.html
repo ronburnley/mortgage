@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+  
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+    }
+  
+    button {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+    }
+  
+    button:hover {
+      background-color: #0056b3;
+    }
+  
+    #loan-amount,
+    #monthly-payment {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mortgage Calculator</h1>
+    <label for="home-price">Home Price:</label>
+    <input type="number" id="home-price" placeholder="Home Price">
+    <label for="down-payment">Down Payment:</label>
+    <input type="number" id="down-payment" placeholder="Down Payment">
+    <label for="interest-rate">Interest Rate (%):</label>
+    <input type="number" id="interest-rate" placeholder="Interest Rate">
+    <label for="loan-term">Loan Term (years):</label>
+    <input type="number" id="loan-term" placeholder="Loan Term">
+    <label for="property-tax">Annual Property Tax (%):</label>
+    <input type="number" id="property-tax" placeholder="Property Tax">
+    <label for="home-insurance">Monthly Home Insurance:</label>
+    <input type="number" id="home-insurance" placeholder="Home Insurance">
+    <button onclick="calculateTotalMonthlyPayment()">Calculate Total Monthly Payment</button>
+    <div id="loan-amount"></div>
+    <div id="monthly-payment"></div>
+  </div>
+
+  <script>
+    function calculateTotalMonthlyPayment() {
+      const homePrice = parseFloat(document.getElementById("home-price").value);
+      const downPayment = parseFloat(document.getElementById("down-payment").value);
+      const loanAmount = homePrice - downPayment;
+      const interestRate = parseFloat(document.getElementById("interest-rate").value) / 100 / 12
+      const loanTerm = parseFloat(document.getElementById("loan-term").value) * 12;
+      const propertyTax = parseFloat(document.getElementById("property-tax").value) / 100 / 12;
+      const homeInsurance = parseFloat(document.getElementById("home-insurance").value);
+      const mortgagePayment = (loanAmount * interestRate * Math.pow(1 + interestRate, loanTerm)) / (Math.pow(1 + interestRate, loanTerm) - 1);
+      const taxPayment = homePrice * propertyTax;
+      const totalMonthlyPayment = mortgagePayment + taxPayment + homeInsurance;
+      const formatCurrency = (value) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+      }
+
+      document.getElementById("loan-amount").innerHTML = loanAmount ? `Loan Amount: ${formatCurrency(loanAmount.toFixed(2))}` : '';
+      document.getElementById("monthly-payment").innerHTML = totalMonthlyPayment ? `Total Monthly Payment: ${formatCurrency(totalMonthlyPayment.toFixed(2))}` : 'Please enter valid values.';
+    }
+  </script>
+</body>
+</html>
+
